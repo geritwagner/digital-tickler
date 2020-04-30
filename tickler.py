@@ -113,10 +113,13 @@ def check_semester_rp_session(tickler_path, activation_path, nautilus_bookmark_p
     current_year = datetime.datetime.now().year
     current_month = datetime.datetime.now().month
 
-    if current_month < 3 or current_month > 8:
-        filename = str(current_year+1) + '-01-03-Semester_RP_Session'
-    else:
-        filename = str(current_year+1) + '-01-09-Semester_RP_Session'
+    if current_month < 3:
+        filename = str(current_year) + '-03-01-Semester_RP_Session'
+    if current_month > 2 and current_month < 9:
+        filename = str(current_year) + '-09-01-Semester_RP_Session'
+    if current_month > 8:
+        filename = str(current_year+1) + '-03-01-Semester_RP_Session'
+    
     filepathname = os.path.join(tickler_path, filename)
     if not os.path.exists(filepathname):
         shutil.copytree(template_semester_path, filepathname, symlinks=True)

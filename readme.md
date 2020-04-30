@@ -14,6 +14,7 @@ It can also use template directories to create and activate material on a regula
 # Features
 
 - Cross-platform, tested on Ubuntu.
+- Based on flat files, no additional database. Easy to backup and restore.
 - Supports symlinks to avoid moving large files or folders (and triggering long sync-processes of Dropbox).
 - Automatically creates and updates bookmarks in Nautilus (Linux) if regular template-directories are provided.
 
