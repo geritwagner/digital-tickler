@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import time
+import click
 
 from dateutil.relativedelta import relativedelta
 
@@ -201,9 +202,8 @@ def check_tickler(tickler_path, activation_path):
             activate_from_tickler(item, tickler_path, activation_path)
     return
 
-
-if __name__ == '__main__':
-
+@click.command()
+def main():
     # try:
     print('Running digital tickler...')
     config = load_config()
@@ -239,3 +239,7 @@ if __name__ == '__main__':
     # except:
     #     print('Unexpected error:', sys.exc_info()[0])
     #     input('Press enter to exit.')
+    return 0
+
+if __name__ == '__main__':
+    main()

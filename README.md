@@ -1,7 +1,8 @@
 # Digital tickler 📅  ✨  🗂
 
-The digital tickler monitors a directory containing YYYY-MM-DD-files-or-folders and moves them to your inbox when you start the computer.
-It can also use template directories to create and activate material on a regular basis.
+- Monitors a directory containing YYYY-MM-DD-files-or-folders
+- Moves the files or folders to your inbox (e.g., the Desktop) when you start the computer.
+- Can also use template directories to create and activate material on a regular basis.
 
 # Think about
 
@@ -18,6 +19,12 @@ It can also use template directories to create and activate material on a regula
 - Supports symlinks to avoid moving large files or folders (and triggering long sync-processes of Dropbox).
 - Automatically creates and updates bookmarks in Nautilus (Linux) if regular template-directories are provided.
 
+# Installation
+
+```
+pip install digital_tickler
+```
+
 # Setup
 
 - Add tickler.py or start_tickler.sh to system-autostart.
@@ -29,3 +36,8 @@ It can also use template directories to create and activate material on a regula
 # Similar Projects
 
 https://github.com/golliher/dg-tickler-file/blob/master/daily_tickler.py
+
+
+# License
+
+MIT License.
