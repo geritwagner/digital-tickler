@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-
 """Tests for `digital_tickler` package."""
-
-
 import unittest
 
 from digital_tickler import digital_tickler

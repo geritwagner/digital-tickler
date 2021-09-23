@@ -11,7 +11,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
 # relative to the documentation root, use os.path.abspath to make it
@@ -19,9 +18,10 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
 
 import digital_tickler
+sys.path.insert(0, os.path.abspath('..'))
+
 
 # -- General configuration ---------------------------------------------
 
@@ -47,8 +47,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Digital Tickler'
-copyright = "2021, Gerit Wagner"
-author = "Gerit Wagner"
+copyright = '2021, Gerit Wagner'
+author = 'Gerit Wagner'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -157,6 +157,3 @@ texinfo_documents = [
      'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

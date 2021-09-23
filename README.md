@@ -27,7 +27,7 @@ pip install digital_tickler
 
 # Setup
 
-- Add tickler.py or start_tickler.sh to system-autostart.
+- Add 'digital_tickler' or start_tickler.sh to system-autostart.
 - When the script is called for the first time:
   - Provide a tickler-path. This is a directory in which files or folders starting with YYYY-MM-DD- are stored. These files will be automatically moved to the inbox-path when the script is executed on YYYY-MM-DD (or any time after this date).
   - Provide an inbox-path. This is the directory to which the files and folders are transferred on YYYY-MM-DD. Choose a directory that you check regularly, such as the Desktop.

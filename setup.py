@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-
 """The setup script."""
-
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -13,10 +12,13 @@ with open('HISTORY.rst') as history_file:
 requirements = ['Click>=7.0',
                 ]
 
-test_requirements = [ ]
+test_requirements = []
+
+description_text = \
+    'Digital tickler activating files or directories on pre-defined dates'
 
 setup(
-    author="Gerit Wagner",
+    author='Gerit Wagner',
     author_email='gerit.wagner@posteo.de',
     python_requires='>=3.6',
     classifiers=[
@@ -29,9 +31,9 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Digital tickler activating files or directories on pre-defined dates",
+    description=description_text,
     install_requires=requirements,
-    license="MIT license",
+    license='MIT license',
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
     include_package_data=True,
@@ -41,8 +43,8 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     entry_points={
-    'console_scripts': [
-        'digital_tickler=digital_tickler.digital_tickler:main',
+        'console_scripts': [
+            'digital_tickler=digital_tickler.digital_tickler:main',
         ],
     },
     url='https://github.com/geritwagner/digital_tickler',

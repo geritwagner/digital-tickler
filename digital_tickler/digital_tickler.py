@@ -5,14 +5,13 @@ import os
 import re
 import shutil
 import time
-import click
 
+import click
 from dateutil.relativedelta import relativedelta
 
 
 def load_config():
-    config_filepath = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'config.ini')
+    config_filepath = os.path.join(os.path.expanduser('~'), '.config.ini')
 
     config = configparser.ConfigParser()
     config.read(config_filepath)
@@ -202,6 +201,7 @@ def check_tickler(tickler_path, activation_path):
             activate_from_tickler(item, tickler_path, activation_path)
     return
 
+
 @click.command()
 def main():
     # try:
@@ -240,6 +240,7 @@ def main():
     #     print('Unexpected error:', sys.exc_info()[0])
     #     input('Press enter to exit.')
     return 0
+
 
 if __name__ == '__main__':
     main()

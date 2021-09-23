@@ -112,7 +112,7 @@ Tips
 To run a subset of tests::
 
 
-    $ python -m unittest tests.test_digital_tickler
+    $ python -m unittest tests.digital_tickler_test
 
 Deploying
 ---------
