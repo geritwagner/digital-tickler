@@ -3,6 +3,8 @@
 from setuptools import find_packages
 from setuptools import setup
 
+import versioneer
+
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
@@ -48,6 +50,7 @@ setup(
         ],
     },
     url='https://github.com/geritwagner/digital_tickler',
-    version='0.0.1',
     zip_safe=False,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
 )
