@@ -49,7 +49,7 @@ setup(
             'digital_tickler=digital_tickler.digital_tickler:main',
         ],
     },
-    url='https://github.com/geritwagner/digital_tickler',
+    url='https://github.com/geritwagner/digital-tickler',
     zip_safe=False,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
