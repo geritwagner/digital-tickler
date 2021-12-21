@@ -2,7 +2,7 @@
 """Tests for `digital_tickler` package."""
 import unittest
 
-from digital_tickler import digital_tickler
+from digital_tickler import digital_tickler  # noqa
 
 
 class TestDigital_tickler(unittest.TestCase):

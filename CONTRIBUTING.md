@@ -1,19 +1,15 @@
-.. highlight:: shell
+# Contributing
 
-============
-Contributing
-============
 
 Contributions are welcome, and they are greatly appreciated! Every little bit
 helps, and credit will always be given.
 
 You can contribute in many ways:
 
-Types of Contributions
-----------------------
+## Types of Contributions
 
-Report Bugs
-~~~~~~~~~~~
+### Report Bugs
+
 
 Report bugs at https://github.com/geritwagner/digital_tickler/issues.
 
@@ -23,27 +19,24 @@ If you are reporting a bug, please include:
 * Any details about your local setup that might be helpful in troubleshooting.
 * Detailed steps to reproduce the bug.
 
-Fix Bugs
-~~~~~~~~
+### Fix Bugs
+
 
 Look through the GitHub issues for bugs. Anything tagged with "bug" and "help
 wanted" is open to whoever wants to implement it.
 
-Implement Features
-~~~~~~~~~~~~~~~~~~
+### Implement Features
 
 Look through the GitHub issues for features. Anything tagged with "enhancement"
 and "help wanted" is open to whoever wants to implement it.
 
-Write Documentation
-~~~~~~~~~~~~~~~~~~~
+### Write Documentation
 
 Digital Tickler could always use more documentation, whether as part of the
 official Digital Tickler docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
-Submit Feedback
-~~~~~~~~~~~~~~~
+### Submit Feedback
 
 The best way to send feedback is to file an issue at https://github.com/geritwagner/digital_tickler/issues.
 
@@ -54,8 +47,7 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-Get Started!
-------------
+## Get Started!
 
 Ready to contribute? Here's how to set up `digital_tickler` for local development.
 
@@ -93,8 +85,7 @@ Ready to contribute? Here's how to set up `digital_tickler` for local developmen
 
 7. Submit a pull request through the GitHub website.
 
-Pull Request Guidelines
------------------------
+## Pull Request Guidelines
 
 Before you submit a pull request, check that it meets these guidelines:
 
@@ -106,23 +97,18 @@ Before you submit a pull request, check that it meets these guidelines:
    https://travis-ci.com/geritwagner/digital_tickler/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
-Tips
-----
+## Tips
 
 To run a subset of tests::
 
 
     $ python -m unittest tests.digital_tickler_test
 
-Deploying
----------
+## Deploying
 
 A reminder for the maintainers on how to deploy.
 Make sure all your changes are committed (including an entry in HISTORY.rst).
 Then run::
 
-$ bump2version patch # possible: major / minor / patch
-$ git push
-$ git push --tags
-
-Travis will then deploy to PyPI if tests pass.
+git tag 1.0
+python setup.py register sdist upload

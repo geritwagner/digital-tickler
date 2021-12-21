@@ -22,7 +22,7 @@
 # Installation
 
 ```
-pip install digital_tickler
+pip install digital-tickler
 ```
 
 # Setup
