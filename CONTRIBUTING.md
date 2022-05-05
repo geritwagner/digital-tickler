@@ -111,4 +111,5 @@ Make sure all your changes are committed (including an entry in HISTORY.rst).
 Then run::
 
 git tag 1.0
-python setup.py register sdist upload
+python3 setup.py sdist
+twine upload dist/*
