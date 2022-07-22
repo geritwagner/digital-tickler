@@ -78,10 +78,11 @@ def load_config():
 def activate_from_tickler(item, tickler_path, activation_path):
     if not os.path.exists(os.path.join(activation_path, item)):
         shutil.move(os.path.join(tickler_path, item), activation_path)
-        os.rename(
-            os.path.join(activation_path, item),
-            os.path.join(activation_path, item[11:]),
-        )
+        if not os.path.exists(os.path.join(activation_path, item[11:])):
+            os.rename(
+                os.path.join(activation_path, item),
+                os.path.join(activation_path, item[11:]),
+            )
         # item[11:] - remove the date-stamp
         print("activated " + item)
     else:
