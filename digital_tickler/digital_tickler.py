@@ -179,6 +179,19 @@ def check_annual_tasks(
     return
 
 
+def check_taxes(tickler_path, template_annual_path, target_path):
+    current_year = datetime.datetime.now().year
+
+    filename = str(current_year + 1) + "-02-01-taxes-" + str(current_year)
+    filepathname = os.path.join(target_path, filename)
+    if not os.path.exists(filepathname):
+        shutil.copytree(template_annual_path, filepathname, symlinks=True)
+        os.symlink(filepathname, os.path.join(tickler_path, filename))
+
+        print("created new taxes dir: " + filename)
+    return
+
+
 def check_tickler(tickler_path, activation_path):
     current_year = datetime.datetime.now().year
     current_month = datetime.datetime.now().month
@@ -248,6 +261,14 @@ def main():
             config["paths"]["inbox_path"],
             config["paths"]["nautilus_bookmark_path"],
             config["paths"]["template_annual_path"],
+        )
+
+    if "" != config["paths"]["taxes_template_path"]:
+        assert os.path.exists(config["paths"]["taxes_template_path"])
+        check_taxes(
+            config["paths"]["tickler_path"],
+            config["paths"]["taxes_template_path"],
+            config["paths"]["taxes_target_path"],
         )
     input("Completed.")
     # except:
