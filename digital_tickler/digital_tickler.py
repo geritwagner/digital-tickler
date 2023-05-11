@@ -11,7 +11,9 @@ from dateutil.relativedelta import relativedelta
 
 
 def load_config():
-    config_filepath = os.path.join(os.path.expanduser("~"), ".config.ini")
+    config_filepath = os.path.join(
+        os.path.expanduser("~"), ".digital_tickler_config.ini"
+    )
 
     config = configparser.ConfigParser()
     config.read(config_filepath)
