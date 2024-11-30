@@ -176,7 +176,7 @@ def check_annual_tasks(
     filepathname = os.path.join(tickler_path, filename)
     if not os.path.exists(filepathname):
         shutil.copytree(template_annual_path, filepathname, symlinks=True)
-        update_nautilus_bookmark(filepathname, "next_annual")
+        update_nautilus_bookmark(nautilus_bookmark_path, filepathname, "next_annual")
         print("created new annual task dir: " + filename)
     return
 
