@@ -8,7 +8,7 @@ import time
 
 import click
 from dateutil.relativedelta import relativedelta
-
+import re
 
 def load_config():
     config_filepath = os.path.join(
@@ -225,7 +225,7 @@ def check_tickler(tickler_path, activation_path):
 
 
 @click.command()
-def main():
+def run():
     # try:
     print("Running digital tickler...")
     config = load_config()
@@ -279,5 +279,79 @@ def main():
     return 0
 
 
+
+
+@click.command()
+def add():
+    """Add a file or folder from the current directory to the tickler with a future date prefix."""
+    config = load_config()
+    tickler_path = config["paths"]["tickler_path"]
+
+    # Include both files and directories (exclude hidden)
+    cwd_items = sorted(
+        (f for f in os.listdir(".")
+        if os.path.isfile(f) or os.path.isdir(f)),
+        key=str.lower,
+    )
+
+    if not cwd_items:
+        print("No files or folders found in current directory.")
+        return
+
+    print("\n📂 Files and folders in current directory:")
+    for idx, fname in enumerate(cwd_items, start=1):
+        type_label = "📁" if os.path.isdir(fname) else "📄"
+        print(f"{idx:2}: {type_label} {fname}")
+
+    try:
+        choice = int(input("\nSelect a file/folder by number: "))
+        selected_item = cwd_items[choice - 1]
+    except (ValueError, IndexError):
+        print("Invalid selection.")
+        return
+
+    note = input("Enter delay (e.g., '2d', '1w', '3m', '1y'): ").strip().lower()
+    match = re.match(r"(\d+)([dwmy])", note)
+    if not match:
+        print("Invalid format. Use e.g., 2d (days), 1w (weeks), 3m (months), 1y (years)")
+        return
+
+    amount, unit = int(match[1]), match[2]
+    today = datetime.date.today()
+
+    if unit == "d":
+        future_date = today + datetime.timedelta(days=amount)
+    elif unit == "w":
+        future_date = today + datetime.timedelta(weeks=amount)
+    elif unit == "m":
+        future_date = today + relativedelta(months=amount)
+    elif unit == "y":
+        future_date = today + relativedelta(years=amount)
+    else:
+        print("Unsupported unit.")
+        return
+
+    new_name = f"{future_date.isoformat()}-{selected_item}"
+    dest_path = os.path.join(tickler_path, new_name)
+
+    if os.path.exists(dest_path):
+        print(f"❌ Destination already exists: {dest_path}")
+        return
+
+    if os.path.isdir(selected_item):
+        shutil.move(selected_item, dest_path)
+        print(f"📁 Moved folder '{selected_item}' to tickler as '{new_name}'")
+    else:
+        shutil.move(selected_item, dest_path)
+        print(f"📄 Moved file '{selected_item}' to tickler as '{new_name}'")
+
+
+@click.group()
+def cli():
+    pass
+
+cli.add_command(run)
+cli.add_command(add)
+
 if __name__ == "__main__":
-    main()
+    run()

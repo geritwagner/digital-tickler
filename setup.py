@@ -48,7 +48,7 @@ setup(
     tests_require=test_requirements,
     entry_points={
         "console_scripts": [
-            "digital_tickler=digital_tickler.digital_tickler:main",
+            "digital_tickler=digital_tickler.digital_tickler:cli",
         ],
     },
     url="https://github.com/geritwagner/digital-tickler",
