@@ -8,7 +8,28 @@ import time
 
 import click
 from dateutil.relativedelta import relativedelta
-import re
+
+
+def parse_delay_or_date(note, today=None):
+    """Return a future date from either delay shorthand or YYYY-MM-DD."""
+    today = today or datetime.date.today()
+
+    delay_match = re.fullmatch(r"(\d+)([dwmy])", note)
+    if delay_match:
+        amount, unit = int(delay_match[1]), delay_match[2]
+        if unit == "d":
+            return today + datetime.timedelta(days=amount)
+        if unit == "w":
+            return today + datetime.timedelta(weeks=amount)
+        if unit == "m":
+            return today + relativedelta(months=amount)
+        if unit == "y":
+            return today + relativedelta(years=amount)
+
+    try:
+        return datetime.datetime.strptime(note, "%Y-%m-%d").date()
+    except ValueError:
+        return None
 
 def load_config():
     config_filepath = os.path.join(
@@ -320,25 +341,15 @@ def add(item):
             print("Invalid selection.")
             return
 
-    note = input("Enter delay (e.g., '2d', '1w', '3m', '1y'): ").strip().lower()
-    match = re.match(r"(\d+)([dwmy])", note)
-    if not match:
-        print("Invalid format. Use e.g., 2d (days), 1w (weeks), 3m (months), 1y (years)")
-        return
-
-    amount, unit = int(match[1]), match[2]
-    today = datetime.date.today()
-
-    if unit == "d":
-        future_date = today + datetime.timedelta(days=amount)
-    elif unit == "w":
-        future_date = today + datetime.timedelta(weeks=amount)
-    elif unit == "m":
-        future_date = today + relativedelta(months=amount)
-    elif unit == "y":
-        future_date = today + relativedelta(years=amount)
-    else:
-        print("Unsupported unit.")
+    note = input(
+        "Enter delay (e.g., '2d', '1w', '3m', '1y') or date (YYYY-MM-DD): "
+    ).strip().lower()
+    future_date = parse_delay_or_date(note)
+    if future_date is None:
+        print(
+            "Invalid format. Use 2d (days), 1w (weeks), 3m (months), 1y (years), "
+            "or a specific date in YYYY-MM-DD format."
+        )
         return
 
     selected_name = os.path.basename(os.path.normpath(selected_item))
