@@ -10,6 +10,32 @@ import click
 from dateutil.relativedelta import relativedelta
 import re
 
+
+def parse_future_date(value, today=None):
+    """Parse either a relative delay (e.g. 2w) or a specific YYYY-MM-DD date."""
+    if today is None:
+        today = datetime.date.today()
+
+    note = value.strip().lower()
+
+    delay_match = re.fullmatch(r"(\d+)([dwmy])", note)
+    if delay_match:
+        amount, unit = int(delay_match[1]), delay_match[2]
+
+        if unit == "d":
+            return today + datetime.timedelta(days=amount)
+        if unit == "w":
+            return today + datetime.timedelta(weeks=amount)
+        if unit == "m":
+            return today + relativedelta(months=amount)
+        if unit == "y":
+            return today + relativedelta(years=amount)
+
+    try:
+        return datetime.date.fromisoformat(note)
+    except ValueError:
+        return None
+
 def load_config():
     config_filepath = os.path.join(
         os.path.expanduser("~"), ".digital_tickler_config.ini"
@@ -310,26 +336,16 @@ def add():
         print("Invalid selection.")
         return
 
-    note = input("Enter delay (e.g., '2d', '1w', '3m', '1y'): ").strip().lower()
-    match = re.match(r"(\d+)([dwmy])", note)
-    if not match:
-        print("Invalid format. Use e.g., 2d (days), 1w (weeks), 3m (months), 1y (years)")
+    note = input(
+        "Enter delay (e.g., '2d', '1w', '3m', '1y') or date (YYYY-MM-DD): "
+    )
+    future_date = parse_future_date(note)
+    if future_date is None:
+        print(
+            "Invalid format. Use 2d/1w/3m/1y for delays or YYYY-MM-DD for a specific date."
+        )
         return
 
-    amount, unit = int(match[1]), match[2]
-    today = datetime.date.today()
-
-    if unit == "d":
-        future_date = today + datetime.timedelta(days=amount)
-    elif unit == "w":
-        future_date = today + datetime.timedelta(weeks=amount)
-    elif unit == "m":
-        future_date = today + relativedelta(months=amount)
-    elif unit == "y":
-        future_date = today + relativedelta(years=amount)
-    else:
-        print("Unsupported unit.")
-        return
 
     new_name = f"{future_date.isoformat()}-{selected_item}"
     dest_path = os.path.join(tickler_path, new_name)

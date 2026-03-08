@@ -1,18 +1,34 @@
 #!/usr/bin/env python
 """Tests for `digital_tickler` package."""
+import datetime
 import unittest
 
-from digital_tickler import digital_tickler  # noqa
+from digital_tickler.digital_tickler import parse_future_date
 
 
-class TestDigital_tickler(unittest.TestCase):
+class TestDigitalTickler(unittest.TestCase):
     """Tests for `digital_tickler` package."""
 
-    def setUp(self):
-        """Set up test fixtures, if any."""
+    def test_parse_relative_days(self):
+        today = datetime.date(2024, 1, 15)
 
-    def tearDown(self):
-        """Tear down test fixtures, if any."""
+        future_date = parse_future_date("2d", today=today)
 
-    def test_000_something(self):
-        """Test something."""
+        self.assertEqual(datetime.date(2024, 1, 17), future_date)
+
+    def test_parse_relative_months(self):
+        today = datetime.date(2024, 1, 31)
+
+        future_date = parse_future_date("1m", today=today)
+
+        self.assertEqual(datetime.date(2024, 2, 29), future_date)
+
+    def test_parse_iso_date(self):
+        future_date = parse_future_date("2026-12-03")
+
+        self.assertEqual(datetime.date(2026, 12, 3), future_date)
+
+    def test_parse_invalid_value(self):
+        future_date = parse_future_date("tomorrow")
+
+        self.assertIsNone(future_date)
