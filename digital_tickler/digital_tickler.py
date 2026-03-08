@@ -282,33 +282,43 @@ def run():
 
 
 @click.command()
-def add():
+@click.argument("item", required=False)
+def add(item):
     """Add a file or folder from the current directory to the tickler with a future date prefix."""
     config = load_config()
     tickler_path = config["paths"]["tickler_path"]
 
-    # Include both files and directories (exclude hidden)
-    cwd_items = sorted(
-        (f for f in os.listdir(".")
-        if os.path.isfile(f) or os.path.isdir(f)),
-        key=str.lower,
-    )
+    if item:
+        selected_item = item
+        if not os.path.exists(selected_item):
+            print(f"File or folder not found: {selected_item}")
+            return
+        if not (os.path.isfile(selected_item) or os.path.isdir(selected_item)):
+            print(f"Not a file or folder: {selected_item}")
+            return
+    else:
+        # Include both files and directories (exclude hidden)
+        cwd_items = sorted(
+            (f for f in os.listdir(".")
+            if os.path.isfile(f) or os.path.isdir(f)),
+            key=str.lower,
+        )
 
-    if not cwd_items:
-        print("No files or folders found in current directory.")
-        return
+        if not cwd_items:
+            print("No files or folders found in current directory.")
+            return
 
-    print("\n📂 Files and folders in current directory:")
-    for idx, fname in enumerate(cwd_items, start=1):
-        type_label = "📁" if os.path.isdir(fname) else "📄"
-        print(f"{idx:2}: {type_label} {fname}")
+        print("\n📂 Files and folders in current directory:")
+        for idx, fname in enumerate(cwd_items, start=1):
+            type_label = "📁" if os.path.isdir(fname) else "📄"
+            print(f"{idx:2}: {type_label} {fname}")
 
-    try:
-        choice = int(input("\nSelect a file/folder by number: "))
-        selected_item = cwd_items[choice - 1]
-    except (ValueError, IndexError):
-        print("Invalid selection.")
-        return
+        try:
+            choice = int(input("\nSelect a file/folder by number: "))
+            selected_item = cwd_items[choice - 1]
+        except (ValueError, IndexError):
+            print("Invalid selection.")
+            return
 
     note = input("Enter delay (e.g., '2d', '1w', '3m', '1y'): ").strip().lower()
     match = re.match(r"(\d+)([dwmy])", note)
@@ -331,7 +341,8 @@ def add():
         print("Unsupported unit.")
         return
 
-    new_name = f"{future_date.isoformat()}-{selected_item}"
+    selected_name = os.path.basename(os.path.normpath(selected_item))
+    new_name = f"{future_date.isoformat()}-{selected_name}"
     dest_path = os.path.join(tickler_path, new_name)
 
     if os.path.exists(dest_path):
