@@ -310,7 +310,7 @@ def add(item):
     tickler_path = config["paths"]["tickler_path"]
 
     if item:
-        selected_item = item
+        selected_item = os.path.normpath(item)
         if not os.path.exists(selected_item):
             print(f"File or folder not found: {selected_item}")
             return
@@ -360,12 +360,15 @@ def add(item):
         print(f"❌ Destination already exists: {dest_path}")
         return
 
-    if os.path.isdir(selected_item):
-        shutil.move(selected_item, dest_path)
-        print(f"📁 Moved folder '{selected_item}' to tickler as '{new_name}'")
-    else:
-        shutil.move(selected_item, dest_path)
-        print(f"📄 Moved file '{selected_item}' to tickler as '{new_name}'")
+    try:
+        if os.path.isdir(selected_item):
+            shutil.move(selected_item, dest_path)
+            print(f"📁 Moved folder '{selected_item}' to tickler as '{new_name}'")
+        else:
+            shutil.move(selected_item, dest_path)
+            print(f"📄 Moved file '{selected_item}' to tickler as '{new_name}'")
+    except OSError as exc:
+        print(f"❌ Failed to move '{selected_item}' to tickler: {exc}")
 
 
 @click.group()
