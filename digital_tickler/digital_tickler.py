@@ -5,10 +5,25 @@ import os
 import re
 import shutil
 import time
+import calendar
 
 import click
-from dateutil.relativedelta import relativedelta
-import re
+
+
+def add_months(date_value, months):
+    """Return a date shifted by the given number of months."""
+    total_month = date_value.month - 1 + months
+    year = date_value.year + total_month // 12
+    month = total_month % 12 + 1
+    day = min(date_value.day, calendar.monthrange(year, month)[1])
+    return datetime.date(year, month, day)
+
+
+def add_years(date_value, years):
+    """Return a date shifted by the given number of years."""
+    year = date_value.year + years
+    day = min(date_value.day, calendar.monthrange(year, date_value.month)[1])
+    return datetime.date(year, date_value.month, day)
 
 
 def parse_future_date(value, today=None):
@@ -27,14 +42,15 @@ def parse_future_date(value, today=None):
         if unit == "w":
             return today + datetime.timedelta(weeks=amount)
         if unit == "m":
-            return today + relativedelta(months=amount)
+            return add_months(today, amount)
         if unit == "y":
-            return today + relativedelta(years=amount)
+            return add_years(today, amount)
 
     try:
         return datetime.date.fromisoformat(note)
     except ValueError:
         return None
+
 
 def load_config():
     config_filepath = os.path.join(
@@ -160,7 +176,7 @@ def check_monthly_rp_session(
     tickler_path, activation_path, nautilus_bookmark_path, template_monthly_path
 ):
     today = datetime.date.today()
-    next_month = today.replace(day=1) + relativedelta(months=1)
+    next_month = add_months(today.replace(day=1), 1)
 
     filename = str(next_month) + "-Monthly_RP_Session"
     filepathname = os.path.join(tickler_path, filename)
@@ -345,7 +361,6 @@ def add():
             "Invalid format. Use 2d/1w/3m/1y for delays or YYYY-MM-DD for a specific date."
         )
         return
-
 
     new_name = f"{future_date.isoformat()}-{selected_item}"
     dest_path = os.path.join(tickler_path, new_name)
