@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digital_tickler"
+version = "0.0.1"
+description = "Digital tickler activating files or directories on pre-defined dates"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = "MIT"
+authors = [{ name = "Gerit Wagner", email = "gerit.wagner@posteo.de" }]
+requires-python = ">=3.10"
+keywords = ["digital_tickler", "tickler", "productivity"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = ["click>=8"]
+
+[project.urls]
+Homepage = "https://github.com/geritwagner/digital-tickler"
+
+[project.scripts]
+digital_tickler = "digital_tickler.digital_tickler:cli"
+
+[project.optional-dependencies]
+dev = [
+  "black>=24",
+  "build>=1",
+  "bump2version>=1",
+  "coverage>=7",
+  "isort>=5",
+  "pytest>=8",
+  "ruff>=0.5",
+  "sphinx>=7",
+  "tox>=4",
+  "twine>=5",
+  "watchdog>=4",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

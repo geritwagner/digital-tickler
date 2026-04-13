@@ -18,8 +18,6 @@ class TestDigital_tickler(unittest.TestCase):
     def tearDown(self):
         """Tear down test fixtures, if any."""
 
-
-
     def test_parse_delay_or_specific_date(self):
         today = datetime.date(2024, 1, 15)
 
@@ -50,7 +48,6 @@ class TestDigital_tickler(unittest.TestCase):
         self.assertIsNone(digital_tickler.parse_delay_or_date("2x", today))
         self.assertIsNone(digital_tickler.parse_delay_or_date("2024-02-30", today))
 
-
     def test_add_normalizes_item_path_with_trailing_slash(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             tickler_path = os.path.join(tmpdir, "tickler")
@@ -58,11 +55,14 @@ class TestDigital_tickler(unittest.TestCase):
             os.mkdir(tickler_path)
             os.mkdir(source_dir)
 
-            with mock.patch.object(
-                digital_tickler,
-                "load_config",
-                return_value={"paths": {"tickler_path": tickler_path}},
-            ), mock.patch("builtins.input", return_value="2026-03-09"):
+            with (
+                mock.patch.object(
+                    digital_tickler,
+                    "load_config",
+                    return_value={"paths": {"tickler_path": tickler_path}},
+                ),
+                mock.patch("builtins.input", return_value="2026-03-09"),
+            ):
                 digital_tickler.add.callback(item=source_dir + "/")
 
             self.assertFalse(os.path.exists(source_dir))

@@ -5,6 +5,6 @@ set -euo pipefail
 sleep 2
 
 gnome-terminal --title="Digital Tickler" -- bash -lc '
-python3 /home/gerit/repos/digital-tickler/digital_tickler/digital_tickler.py
+digital_tickler run
 exec bash
 '

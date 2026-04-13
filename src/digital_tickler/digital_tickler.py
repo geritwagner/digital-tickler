@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import calendar
 import configparser
 import datetime
 import os
@@ -7,7 +8,20 @@ import shutil
 import time
 
 import click
-from dateutil.relativedelta import relativedelta
+
+
+def _add_months(base_date, months):
+    month = base_date.month - 1 + months
+    year = base_date.year + month // 12
+    month = month % 12 + 1
+    day = min(base_date.day, calendar.monthrange(year, month)[1])
+    return datetime.date(year, month, day)
+
+
+def _add_years(base_date, years):
+    year = base_date.year + years
+    day = min(base_date.day, calendar.monthrange(year, base_date.month)[1])
+    return datetime.date(year, base_date.month, day)
 
 
 def parse_delay_or_date(note, today=None):
@@ -22,14 +36,15 @@ def parse_delay_or_date(note, today=None):
         if unit == "w":
             return today + datetime.timedelta(weeks=amount)
         if unit == "m":
-            return today + relativedelta(months=amount)
+            return _add_months(today, amount)
         if unit == "y":
-            return today + relativedelta(years=amount)
+            return _add_years(today, amount)
 
     try:
         return datetime.datetime.strptime(note, "%Y-%m-%d").date()
     except ValueError:
         return None
+
 
 def load_config():
     config_filepath = os.path.join(
@@ -155,7 +170,7 @@ def check_monthly_rp_session(
     tickler_path, activation_path, nautilus_bookmark_path, template_monthly_path
 ):
     today = datetime.date.today()
-    next_month = today.replace(day=1) + relativedelta(months=1)
+    next_month = _add_months(today.replace(day=1), 1)
 
     filename = str(next_month) + "-Monthly_RP_Session"
     filepathname = os.path.join(tickler_path, filename)
@@ -300,12 +315,10 @@ def run():
     return 0
 
 
-
-
 @click.command()
 @click.argument("item", required=False)
 def add(item):
-    """Add a file or folder from the current directory to the tickler with a future date prefix."""
+    """Add an item from the current directory to the tickler with a date prefix."""
     config = load_config()
     tickler_path = config["paths"]["tickler_path"]
 
@@ -320,8 +333,7 @@ def add(item):
     else:
         # Include both files and directories (exclude hidden)
         cwd_items = sorted(
-            (f for f in os.listdir(".")
-            if os.path.isfile(f) or os.path.isdir(f)),
+            (f for f in os.listdir(".") if os.path.isfile(f) or os.path.isdir(f)),
             key=str.lower,
         )
 
@@ -341,9 +353,11 @@ def add(item):
             print("Invalid selection.")
             return
 
-    note = input(
-        "Enter delay (e.g., '2d', '1w', '3m', '1y') or date (YYYY-MM-DD): "
-    ).strip().lower()
+    note = (
+        input("Enter delay (e.g., '2d', '1w', '3m', '1y') or date (YYYY-MM-DD): ")
+        .strip()
+        .lower()
+    )
     future_date = parse_delay_or_date(note)
     if future_date is None:
         print(
@@ -374,6 +388,7 @@ def add(item):
 @click.group()
 def cli():
     pass
+
 
 cli.add_command(run)
 cli.add_command(add)
