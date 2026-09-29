@@ -308,7 +308,7 @@ def run():
             config["paths"]["taxes_template_path"],
             config["paths"]["taxes_target_path"],
         )
-    input("Completed.")
+    # input("Completed.")
     # except:
     #     print('Unexpected error:', sys.exc_info()[0])
     #     input('Press enter to exit.')
