@@ -263,7 +263,7 @@ def check_tickler(tickler_path, activation_path):
 @click.command()
 def run():
     # try:
-    print("Running digital tickler...")
+    # print("Running digital tickler...")
     config = load_config()
     assert os.path.exists(config["paths"]["tickler_path"])
     assert os.path.exists(config["paths"]["inbox_path"])
