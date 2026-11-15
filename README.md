@@ -33,6 +33,26 @@ pip install digital-tickler
   - Provide an inbox-path. This is the directory to which the files and folders are transferred on YYYY-MM-DD. Choose a directory that you check regularly, such as the Desktop.
   - Optional: provide paths for template_weekly_path, template_monthly_path, template_semester_path, template_annual_path. The script will copy the template directories to the tickler-path on a regular basis, e.g., for regular review-and-planning sessions.
 
+## Path configuration
+
+Paths can be configured in `~/.digital_tickler_config.ini` under `[paths]` or
+provided as environment variables. A non-empty INI value takes precedence; if
+it is empty or missing, the matching non-empty environment variable is used;
+otherwise Digital Tickler keeps its existing default (prompting for the core
+paths and leaving optional template paths empty). Environment values are read
+as literal path strings, including spaces, and are not written into the INI file.
+
+| INI setting | Environment variable |
+| --- | --- |
+| `tickler_path` | `TICKLER_DIR` |
+| `inbox_path` | `INBOX_DIR` |
+| `template_weekly_path` | `TICKLER_WEEKLY_TEMPLATE` |
+| `template_monthly_path` | `TICKLER_MONTHLY_TEMPLATE` |
+| `template_semester_path` | `TICKLER_SEMESTER_TEMPLATE` |
+| `template_annual_path` | `TICKLER_ANNUAL_TEMPLATE` |
+| `taxes_template_path` | `TICKLER_TAXES_TEMPLATE` |
+| `taxes_target_path` | `TICKLER_TAXES_TARGET` |
+
 # Similar Projects
 
 https://github.com/golliher/dg-tickler-file/blob/master/daily_tickler.py

@@ -9,6 +9,17 @@ import time
 
 import click
 
+PATH_ENVIRONMENT_VARIABLES = {
+    "tickler_path": "TICKLER_DIR",
+    "inbox_path": "INBOX_DIR",
+    "template_weekly_path": "TICKLER_WEEKLY_TEMPLATE",
+    "template_monthly_path": "TICKLER_MONTHLY_TEMPLATE",
+    "template_semester_path": "TICKLER_SEMESTER_TEMPLATE",
+    "template_annual_path": "TICKLER_ANNUAL_TEMPLATE",
+    "taxes_template_path": "TICKLER_TAXES_TEMPLATE",
+    "taxes_target_path": "TICKLER_TAXES_TARGET",
+}
+
 
 def _add_months(base_date, months):
     month = base_date.month - 1 + months
@@ -54,23 +65,20 @@ def load_config():
     config = configparser.ConfigParser()
     config.read(config_filepath)
     config_changed = False
+    paths_section_missing = "paths" not in config
+    required_path_prompts = {
+        "tickler_path": "What is the tickler-path?",
+        "inbox_path": "What is the inbox-path?",
+        "template_weekly_path": "What is the path for the weekly template?",
+        "template_monthly_path": "What is the path for the monthly template?",
+        "template_semester_path": "What is the path for the semester template?",
+        "template_annual_path": "What is the path for the annual template?",
+    }
 
     if "paths" not in config:
         config["paths"] = {}
-        config["paths"]["tickler_path"] = input("What is the tickler-path?")
-        config["paths"]["inbox_path"] = input("What is the inbox-path?")
-        config["paths"]["template_weekly_path"] = input(
-            "What is the path for the weekly template?"
-        )
-        config["paths"]["template_monthly_path"] = input(
-            "What is the path for the monthly template?"
-        )
-        config["paths"]["template_semester_path"] = input(
-            "What is the path for the semester template?"
-        )
-        config["paths"]["template_annual_path"] = input(
-            "What is the path for the annual template?"
-        )
+        for key in required_path_prompts:
+            config["paths"][key] = ""
         bookmark_path = os.path.join(
             os.path.expanduser("~"), ".config/gtk-3.0/bookmarks"
         )
@@ -79,37 +87,35 @@ def load_config():
         else:
             config["paths"]["nautilus_bookmark_path"] = ""
         config_changed = True
-    else:
-        if "tickler_path" not in config["paths"]:
-            config["paths"]["tickler_path"] = input("What is the tickler-path?")
+
+    for key, prompt in required_path_prompts.items():
+        ini_value = config["paths"].get(key, "")
+        environment_value = os.environ.get(PATH_ENVIRONMENT_VARIABLES[key], "")
+        if (
+            not environment_value
+            and not ini_value
+            and (paths_section_missing or key not in config["paths"])
+        ):
+            config["paths"][key] = input(prompt)
             config_changed = True
-        if "inbox_path" not in config["paths"]:
-            config["paths"]["inbox_path"] = input("What is the inbox-path?")
-            config_changed = True
-        if "template_weekly_path" not in config["paths"]:
-            config["paths"]["template_weekly_path"] = input(
-                "What is the path for the weekly template?"
-            )
-            config_changed = True
-        if "template_monthly_path" not in config["paths"]:
-            config["paths"]["template_monthly_path"] = input(
-                "What is the path for the monthly template?"
-            )
-            config_changed = True
-        if "template_semester_path" not in config["paths"]:
-            config["paths"]["template_semester_path"] = input(
-                "What is the path for the semester template?"
-            )
-            config_changed = True
-        if "template_annual_path" not in config["paths"]:
-            config["paths"]["template_annual_path"] = input(
-                "What is the path for the annual template?"
-            )
-            config_changed = True
+
+    for key in ("taxes_template_path", "taxes_target_path"):
+        if key not in config["paths"]:
+            config["paths"][key] = ""
 
     if config_changed:
         with open(config_filepath, "w") as configfile:
             config.write(configfile)
+
+    # Keep environment values in-memory only, so INI settings remain authoritative
+    # and the user's configuration file is not changed by the fallback mechanism.
+    for key, environment_variable in PATH_ENVIRONMENT_VARIABLES.items():
+        ini_value = config["paths"].get(key, "")
+        if not ini_value:
+            environment_value = os.environ.get(environment_variable, "")
+            if environment_value:
+                config["paths"][key] = environment_value
+
     return config
 
 
